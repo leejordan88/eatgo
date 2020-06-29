@@ -3,6 +3,7 @@ package kr.co.fastcampus.interfaces;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,5 +23,12 @@ public class MenuItemController {
 		menuItemService.bulkUpdate(restaurantId, menuItems);
 		return "";
 	}
+	
+	@GetMapping("/restaurant/{restaurantId}/menuitems")
+	public List<MenuItem> getMenuItems(@PathVariable("restaurantId") Long restaurantId) {
+		List<MenuItem> menuItmes = menuItemService.findByRestaurantId(restaurantId);
+		return menuItmes;
+	}
+
 
 }

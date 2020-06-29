@@ -1,0 +1,13 @@
+spring:
+  profiles: fileDB
+  datasource:
+    url: jdbc:h2:~/data/eatgo
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+---
+spring:
+  profiles: memDB
+  datasource:
+    url: jdbc:h2:mem:test
