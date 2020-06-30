@@ -35,7 +35,7 @@ class RestaurantControllerTest {
 		List<Restaurant> restaurants = new ArrayList<>();
 		Restaurant restaurant = Restaurant.builder().id(1004L).name("Joonung").address("Anyang").build();
 		restaurants.add(restaurant);
-		given(restaurantService.getRestaurants()).willReturn(restaurants);
+		given(restaurantService.getRestaurants("Anyang", 1L)).willReturn(restaurants);
 
 		mvc.perform(get("/restaurants")).andExpect(status().isOk());
 

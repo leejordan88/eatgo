@@ -18,44 +18,44 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import kr.co.fastcampus.application.RegionService;
-import kr.co.fastcampus.domain.Region;
+import kr.co.fastcampus.application.CategoryService;
+import kr.co.fastcampus.domain.Category;
 
-@WebMvcTest(RegionController.class)
-@ContextConfiguration(classes = RegionController.class)
-class RegionControllerTest {
+@WebMvcTest(CategoryController.class)
+@ContextConfiguration(classes = CategoryController.class)
+class CategoryControllerTest {
 
 	@Autowired
 	private MockMvc mvc;
 	
 	@MockBean
-	private RegionService regionService;
+	private CategoryService categoryService;
 
 	@Test
 	public void list() throws Exception {
-		List<Region> regions = new ArrayList<Region>();
-		regions.add(Region.builder().name("seoul").build());
-		given(regionService.getRegions()).willReturn(regions);
+		List<Category> categorys = new ArrayList<Category>();
+		categorys.add(Category.builder().name("korean food").build());
+		given(categoryService.getCategorys()).willReturn(categorys);
 		
-		mvc.perform(get("/regions"))
+		mvc.perform(get("/categorys"))
 			.andExpect(status().isOk())
-			.andExpect(content().string(containsString("seoul")));
+			.andExpect(content().string(containsString("korean food")));
 	}
 	
 //	@Test
 	public void create() throws Exception {
-		Region region = Region.builder()
-				.name("seoul")
+		Category category = Category.builder()
+				.name("korean food")
 				.build();
-		given(regionService.addRegion(region)).willReturn(
-				Region.builder()
+		given(categoryService.addCategory(category)).willReturn(
+				Category.builder()
 				.id(1L)
-				.name("seoul")
+				.name("korean food")
 				.build());
 		
-		mvc.perform(post("/region")
+		mvc.perform(post("/category")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content("\"seoul\""))
+				.content("\"korean food\""))
 				.andExpect(status().isCreated())
 				.andExpect(content().string("{}"));
 		

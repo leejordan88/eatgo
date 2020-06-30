@@ -28,8 +28,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 	}
 
 	@Override
-	public List<Restaurant> getRestaurants() {
-		return restaurantRepository.findAll();
+	public List<Restaurant> getRestaurants(String region, Long categoryId) {
+		return restaurantRepository.findAllByAddressContainingAndCategoryId(region, categoryId);
 	}
 
 	@Override

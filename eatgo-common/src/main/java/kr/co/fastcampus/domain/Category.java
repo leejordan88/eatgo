@@ -18,13 +18,13 @@ import lombok.ToString;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Region {
+public class Category {
 	@Id
 	@GeneratedValue
 	private Long id;
 	private String name;
 
-	public Region(String name) {
+	public Category(String name) {
 		this.name = name;
 	}
 
