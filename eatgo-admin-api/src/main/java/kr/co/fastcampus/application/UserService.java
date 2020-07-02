@@ -26,7 +26,23 @@ public class UserService {
 	}
 
 	public User addUser(String email, String name, Long level) {
-		return null;
+		User user = User.builder()
+				.email(email).name(name).level(level).build();
+		return userRepository.save(user);
+	}
+
+	public User updateUser(Long id, String email, String name, Long level) {
+		User user = userRepository.findById(id).orElse(null);
+		user.setEmail(email);
+		user.setName(name);
+		user.setLevel(level);
+		return userRepository.save(user);
+	}
+
+	public User deactivateUser(long id) {
+		User user = userRepository.findById(id).orElse(null);
+		user.deActivate();
+		return userRepository.save(user);
 	}
 
 }

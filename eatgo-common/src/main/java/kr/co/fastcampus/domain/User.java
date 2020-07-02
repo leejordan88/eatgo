@@ -5,15 +5,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
+@Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,16 +35,25 @@ public class User {
 
 	@NotNull
 	private Long level;
-
-	public User(@NotEmpty String email, @NotEmpty String name, Long level) {
-		super();
-		this.email = email;
-		this.name = name;
-		this.level = level;
-	}
-
+	
+	@NotEmpty
+	private String password;
+	
 	public boolean isAdmin() {
 		return level >= 100;
+	}
+
+	public boolean isActive() {
+		return level > 0;
+	}
+
+	public void deActivate() {
+		level = 0L;
+	}
+	
+	@JsonIgnore
+	public String getAccessToken() {
+		return password.substring(0, 10);
 	}
 
 }

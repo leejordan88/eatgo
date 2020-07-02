@@ -2,8 +2,10 @@ package kr.co.fastcampus.interfaces;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -45,16 +47,47 @@ class UserControllerTest {
 	
 	@Test
 	public void create() throws Exception {
-		mvc.perform(post("/user")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("\"tester@example.com\", \"tester\", 1"))
-			.andExpect(status().isCreated());
-		
 		String email = "tester@example.com";
 		String name = "tester";
 		Long level = 1L;
 		
-//		verify(userService).addUser(email, name, level);
+		User user = User.builder()
+				.email(email)
+				.name(name)
+				.build();
+		given(userService.addUser(email, name, level)).willReturn(user);
+		
+		mvc.perform(post("/user")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"email\":\"tester@example.com\",\"name\":\"tester\",\"level\":1}"))
+			.andExpect(status().isCreated());
+		
+		
+		verify(userService).addUser(email, name, level);
+	}
+	
+	@Test
+	public void update() throws Exception {
+		Long id = 1004L;
+		String email = "tester@example.com";
+		String name = "tester";
+		Long level = 100L;
+		
+		mvc.perform(patch("/user/1004")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"email\":\"tester@example.com\",\"name\":\"tester\",\"level\":100}"))
+			.andExpect(status().isOk());
+		verify(userService).updateUser(eq(id), eq(email), eq(name), eq(level));
 	}
 
+	@Test
+	public void deactivate() throws Exception {
+		mvc.perform(delete("/user/1004"))
+			.andExpect(status().isOk());
+		
+		verify(userService).deactivateUser(1004L);
+		
+		
+	}
+	
 }
