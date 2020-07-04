@@ -30,7 +30,6 @@ public class Review {
 	
 	private Long restaurantId;
 	
-	@NotEmpty
 	private String name;
 	
 	@NotNull
