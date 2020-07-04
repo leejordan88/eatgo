@@ -1,10 +1,8 @@
 package kr.co.fastcampus.interfaces;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.Mockito.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -24,6 +22,7 @@ import kr.co.fastcampus.config.SecurityConfig;
 import kr.co.fastcampus.domain.User;
 import kr.co.fastcampus.exception.EmailNotExistedException;
 import kr.co.fastcampus.exception.PasswordWrongException;
+import kr.co.fastcampus.util.JwtUtil;
 
 @WebMvcTest(SessionController.class)
 @ContextConfiguration(classes={SessionController.class, SecurityConfig.class, SessionErrorAdvice.class})
@@ -35,24 +34,35 @@ class SessionControllerTest {
 	@MockBean
 	private UserService userService;
 	
+	@MockBean
+	private JwtUtil jwtUtil;
+	
 	@Test
 	@DisplayName("세션 생성 성공")
 	public void createWithValidAttributes() throws Exception {
+		Long id = 1004L;
+		String name = "john";
 		String email = "tester@example.com";
 		String password = "test";
+		
 		User mockUser = User.builder()
-				.password("ACCESSTOKEN")
+				.id(id)
+				.name(name)
 				.build();
+		
 		given(userService.authenticate(email, password)).willReturn(mockUser);
+		given(jwtUtil.createToken(id, name)).willReturn("header.payload.signature");
 		
 		mvc.perform(post("/session")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{\"email\":\"tester@example.com\",\"name\":\"Tester\",\"password\":\"test\"}"))
 			.andExpect(status().isCreated())
 			.andExpect(header().string("location", "/session"))
-			.andExpect(content().string("{\"accessToken\":\"ACCESSTOKE\"}"));
+			.andExpect(content().string("{\"accessToken\":\"header.payload.signature\"}"));
+		
 		
 		verify(userService).authenticate(eq(email), eq(password));
+		
 	}
 	
 	@Test

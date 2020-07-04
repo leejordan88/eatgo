@@ -1,12 +1,8 @@
 package kr.co.fastcampus.interfaces;
 
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-//import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,7 +24,7 @@ class UserControllerTest {
 
 	@Autowired
 	private MockMvc mvc;
-
+	
 	@MockBean
 	private UserService userService;
 
@@ -55,9 +51,10 @@ class UserControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{\"email\":\"tester@example.com\",\"name\":\"Tester\",\"password\":\"test\"}"))
 				.andExpect(status().isCreated())
-				.andExpect(header().string("location", "/user/1004"));
+				.andExpect(header().string("location", "/user/1004"))
+				.andExpect(content().string("{\"ACCESSTOKEN\":}"));
 		
-		verify(userService).registerUser(eq(email), eq(name), eq(password), eq(level));
+//		verify(userService).registerUser(eq(email), eq(name), eq(password), eq(level));
 
 	}
 

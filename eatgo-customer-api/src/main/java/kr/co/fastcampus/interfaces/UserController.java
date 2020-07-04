@@ -21,11 +21,10 @@ public class UserController {
 	@PostMapping("/user")
 	public ResponseEntity<?> create(
 			@RequestBody User resource) throws URISyntaxException {
-		
-		User user = userService.registerUser(resource.getEmail(), resource.getName(), resource.getPassword(), resource.getLevel());
-		
+		User user = userService.registerUser(
+				resource.getEmail(), resource.getName(), resource.getPassword(), resource.getLevel());
 		URI uri = new URI("/user/" + user.getId());
-		return ResponseEntity.created(uri).body(user);
+		return ResponseEntity.created(uri).body("{}");
 	}
 	
 }

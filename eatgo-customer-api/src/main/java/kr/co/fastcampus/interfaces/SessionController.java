@@ -11,9 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.fastcampus.application.UserService;
 import kr.co.fastcampus.domain.User;
+import kr.co.fastcampus.util.JwtUtil;
 
 @RestController
 public class SessionController {
+	
+	@Autowired
+	private JwtUtil jwtUtil;
 	
 	@Autowired
 	private UserService userService;
@@ -21,13 +25,12 @@ public class SessionController {
 	@PostMapping("/session")
 	public ResponseEntity<SessionResponsenDto> create(
 			@RequestBody SessionRequestDto resource) throws URISyntaxException {
-		URI uri = new URI("/session");
-		
 		User user = userService.authenticate(resource.getEmail(), resource.getPassword());
-		
+		String accessToken = jwtUtil.createToken(user.getId(), user.getName());
+		URI uri = new URI("/session");
 		return ResponseEntity.created(uri).body(
 				SessionResponsenDto.builder()
-				.accessToken(user.getAccessToken())
+				.accessToken(accessToken)
 				.build());
 	}
 }

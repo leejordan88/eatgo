@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -49,11 +48,6 @@ public class User {
 
 	public void deActivate() {
 		level = 0L;
-	}
-	
-	@JsonIgnore
-	public String getAccessToken() {
-		return password.substring(0, 10);
 	}
 
 }
